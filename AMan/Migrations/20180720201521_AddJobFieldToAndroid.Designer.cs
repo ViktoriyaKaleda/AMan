@@ -8,9 +8,10 @@ using AMan.Models;
 namespace AMan.Migrations
 {
     [DbContext(typeof(AManJobContext))]
-    partial class AManJobContextModelSnapshot : ModelSnapshot
+    [Migration("20180720201521_AddJobFieldToAndroid")]
+    partial class AddJobFieldToAndroid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -23,7 +24,7 @@ namespace AMan.Migrations
 
                     b.Property<string>("AvatarPath");
 
-                    b.Property<int?>("CurrentJobId");
+                    b.Property<int>("CurrentJobId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -65,7 +66,8 @@ namespace AMan.Migrations
                 {
                     b.HasOne("AMan.Models.Job", "CurrentJob")
                         .WithMany()
-                        .HasForeignKey("CurrentJobId");
+                        .HasForeignKey("CurrentJobId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

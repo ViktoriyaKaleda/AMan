@@ -27,5 +27,8 @@ namespace AMan.Models
 		public int Reliability { get; set; } = 10;
 		
 		public bool Status { get; set; }
+
+		public int? CurrentJobId { get; set; }
+		public Job CurrentJob { get; set; }
 	}
 }

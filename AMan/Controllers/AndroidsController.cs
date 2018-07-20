@@ -8,6 +8,7 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AMan.Controllers
 {
@@ -24,14 +25,16 @@ namespace AMan.Controllers
 			_logger = logger;
 		}
 
-        // GET: Androids
-        public async Task<IActionResult> Index()
+		// GET: Androids
+		[Authorize]
+		public async Task<IActionResult> Index()
         {
             return View(await _context.Android.ToListAsync());
         }
 
-        // GET: Androids/Details/5
-        public async Task<IActionResult> Details(int? id)
+		// GET: Androids/Details/5
+		[Authorize]
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -48,8 +51,9 @@ namespace AMan.Controllers
             return View(android);
         }
 
-        // GET: Androids/Create
-        public IActionResult Create()
+		// GET: Androids/Create
+		[Authorize]
+		public IActionResult Create()
         {
             return View();
         }
@@ -59,7 +63,8 @@ namespace AMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,SkillsTags,Reliability,Status")] Android android, IFormFile avatar)
+		[Authorize]
+		public async Task<IActionResult> Create([Bind("Id,Name,SkillsTags,Reliability,Status")] Android android, IFormFile avatar)
         {
             if (ModelState.IsValid)
             {
@@ -77,8 +82,9 @@ namespace AMan.Controllers
 						await avatar.CopyToAsync(fileStream);
 					}
 				}
-				
+
 				_context.Add(android);
+				
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -89,8 +95,9 @@ namespace AMan.Controllers
 			return View(android);
         }
 
-        // GET: Androids/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+		// GET: Androids/Edit/5
+		[Authorize]
+		public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -110,7 +117,8 @@ namespace AMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Avatar,Reliability,Status")] Android android)
+		[Authorize]
+		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Avatar,Reliability,Status")] Android android)
         {
             if (id != android.Id)
             {
@@ -140,8 +148,9 @@ namespace AMan.Controllers
             return View(android);
         }
 
-        // GET: Androids/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+		// GET: Androids/Delete/5
+		[Authorize]
+		public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -161,7 +170,8 @@ namespace AMan.Controllers
         // POST: Androids/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+		[Authorize]
+		public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var android = await _context.Android.SingleOrDefaultAsync(m => m.Id == id);
             _context.Android.Remove(android);
