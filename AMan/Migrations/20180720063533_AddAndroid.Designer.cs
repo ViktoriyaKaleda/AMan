@@ -8,9 +8,10 @@ using AMan.Models;
 namespace AMan.Migrations
 {
     [DbContext(typeof(AManJobContext))]
-    partial class AManJobContextModelSnapshot : ModelSnapshot
+    [Migration("20180720063533_AddAndroid")]
+    partial class AddAndroid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -21,15 +22,13 @@ namespace AMan.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AvatarPath");
+                    b.Property<string>("Avatar");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(16);
 
                     b.Property<int>("Reliability");
-
-                    b.Property<string>("SkillsTags");
 
                     b.Property<bool>("Status");
 

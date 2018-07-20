@@ -8,9 +8,10 @@ using AMan.Models;
 namespace AMan.Migrations
 {
     [DbContext(typeof(AManJobContext))]
-    partial class AManJobContextModelSnapshot : ModelSnapshot
+    [Migration("20180720135859_ChangeAndroidSkills2")]
+    partial class ChangeAndroidSkills2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
