@@ -74,7 +74,7 @@ namespace AMan.Controllers
 
 					android.AvatarPath = "~/" + path;
 
-					using (var fileStream = new FileStream(Path.Combine(_appEnvironment.WebRootPath, path), FileMode.Create))
+					using (var fileStream = new FileStream(_appEnvironment.WebRootPath + "/" + path, FileMode.Create))
 					{
 						await avatar.CopyToAsync(fileStream);
 					}
@@ -137,14 +137,14 @@ namespace AMan.Controllers
 					{
 						if (android.AvatarPath != null)
 						{
-							System.IO.File.Delete(Path.Combine(_appEnvironment.WebRootPath, "Avatars", Path.GetFileName(android.AvatarPath)));
+							System.IO.File.Delete(_appEnvironment.WebRootPath + "/Avatars/" + Path.GetFileName(android.AvatarPath));
 						}
 
 						string path = GetAvatarPath(avatar);
 
 						android.AvatarPath = "~/" + path;
 
-						using (var fileStream = new FileStream(Path.Combine(_appEnvironment.WebRootPath, path), FileMode.Create))
+						using (var fileStream = new FileStream(_appEnvironment.WebRootPath + "/" + path, FileMode.Create))
 						{
 							await avatar.CopyToAsync(fileStream);
 						}
@@ -196,7 +196,7 @@ namespace AMan.Controllers
             var android = await _context.Android.SingleOrDefaultAsync(m => m.Id == id);
 			if (android.AvatarPath != null)
 			{
-				System.IO.File.Delete(Path.Combine(_appEnvironment.WebRootPath, "Avatars", Path.GetFileName(android.AvatarPath)));
+				System.IO.File.Delete(_appEnvironment.WebRootPath + "/Avatars/" + Path.GetFileName(android.AvatarPath));
 			}
 			_context.Android.Remove(android);
             await _context.SaveChangesAsync();

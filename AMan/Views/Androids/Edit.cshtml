@@ -19,16 +19,16 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </div>
-        <div>
+        <div id="imagePreview" class="form-group">
             <label asp-for="AvatarPath" class="col-md-2 control-label"></label>
             @Html.HiddenFor(model => model.AvatarPath)
-            <img src="@Url.Content(Model.AvatarPath ?? "~/Avatars/default.png")" class="avatar" />
+            <img id="targetImg" src="@Url.Content(Model.AvatarPath ?? "~/Avatars/default.png")" class="avatar" />
         </div>
         <br />
         <div class="form-group">
             <label class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input type="file" name="avatar" />
+                <input id="imageBrowse" type="file" name="avatar" />
             </div>
         </div>
         <div class="form-group">
@@ -67,3 +67,46 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script src="~/lib/jquery/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $("#imageBrowse").change(function () {
+
+            var File = this.files;
+
+            if (File && File[0]) {
+                ReadImage(File[0]);
+            }
+            else {
+                $("#targetImg").attr('src', "@Url.Content(Model.AvatarPath ?? "~/Avatars/default.png")");
+
+            }
+        })
+    })
+
+
+    var ReadImage = function (file) {
+
+        var reader = new FileReader;
+        var image = new Image;
+
+        reader.readAsDataURL(file);
+        reader.onload = function (_file) {
+
+            image.src = _file.target.result;
+            image.onload = function () {
+
+                var height = this.height;
+                var width = this.width;
+                var type = file.type;
+                var size = ~~(file.size / 1024) + "KB";
+
+                $("#targetImg").attr('src', _file.target.result);
+                $("#imagePreview").show();
+            }
+        }
+    }
+</script>

@@ -21,7 +21,13 @@
         <div class="form-group">
             <label asp-for="AvatarPath" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input type="file" name="avatar">                    
+                <input type="file" name="avatar" id="imageBrowse">                    
+            </div>
+        </div>
+        <div class="form-group" id="imagePreview" style="display:none">
+            <a href="#" onclick="ClearPreview()" class="col-md-2 control-label"><i class="glyphicon glyphicon-trash"></i></a>
+            <div class="col-md-10">
+                <img id="targetImg" class="avatar" />                
             </div>
         </div>
         <div class="form-group">
@@ -53,3 +59,48 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script src="~/lib/jquery/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $("#imageBrowse").change(function () {
+
+            var File = this.files;
+
+            if (File && File[0]) {
+                ReadImage(File[0]);
+            }
+        })
+    })
+
+
+    var ReadImage = function (file) {
+
+        var reader = new FileReader;
+        var image = new Image;
+
+        reader.readAsDataURL(file);
+        reader.onload = function (_file) {
+
+            image.src = _file.target.result;
+            image.onload = function () {
+
+                var height = this.height;
+                var width = this.width;
+                var type = file.type;
+                var size = ~~(file.size / 1024) + "KB";
+
+                $("#targetImg").attr('src', _file.target.result);
+                $("#imagePreview").show();
+            }
+        }
+    }
+
+    var ClearPreview = function () {
+        $("#imageBrowse").val('');
+        $("#imagePreview").hide();
+    }
+
+</script>
