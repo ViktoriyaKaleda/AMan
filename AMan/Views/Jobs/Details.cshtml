@@ -27,9 +27,21 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Complexity)
-        </dd>
+        </dd>        
     </dl>
+    @*<div>
+    <details>
+        <summary>Assign Android to this job</summary>
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action">
+                <h5 class="list-group-item-heading">List group item heading</h5>
+                <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+            </a>
+        </div>
+    </details>
+        </div>*@
 </div>
+<br />
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>

@@ -6,6 +6,10 @@
     <UserSecretsId>aspnet-AMan-61469276-6B5B-4AC2-A579-B41D30C7E111</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\Avatars\default.png" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
@@ -32,8 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Avatars\" />
-    <Folder Include="wwwroot\Avatars\" />
+    <EmbeddedResource Include="wwwroot\Avatars\default.png" />
   </ItemGroup>
 
 </Project>

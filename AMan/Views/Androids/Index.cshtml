@@ -19,35 +19,54 @@
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.SkillsTags)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Reliability)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Status)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CurrentJob)
+                </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <img src="@Url.Content(item.AvatarPath ?? "Avatars/default.png")" class="avatar" />
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reliability)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            <img src="@Url.Content(item.AvatarPath ?? "~/Avatars/default.png")" class="avatar" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SkillsTags)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Reliability)
+        </td>
+        <td>
+            @if (item.Status == true)
+            {
+                <p style="color: green">Active</p>
 }
+            else
+            {
+                <p style="color: red">Should be reclaimed</p>
+            }
+         </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CurrentJob)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>}
     </tbody>
 </table>

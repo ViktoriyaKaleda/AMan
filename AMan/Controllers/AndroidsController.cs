@@ -64,18 +64,15 @@ namespace AMan.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 		[Authorize]
-		public async Task<IActionResult> Create([Bind("Id,Name,SkillsTags,Reliability,Status")] Android android, IFormFile avatar)
+		public async Task<IActionResult> Create([Bind("Id,Name,SkillsTags,Reliability")] Android android, IFormFile avatar)
         {
             if (ModelState.IsValid)
             {
 				if (avatar != null)
 				{
-					string fileName = Path.GetFileNameWithoutExtension(avatar.FileName);
-					string extension = Path.GetExtension(avatar.FileName);
-					fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-					string path = Path.Combine("Avatars", fileName);
+					string path = GetAvatarPath(avatar);
 
-					android.AvatarPath = path;
+					android.AvatarPath = "~/" + path;
 
 					using (var fileStream = new FileStream(Path.Combine(_appEnvironment.WebRootPath, path), FileMode.Create))
 					{
@@ -83,17 +80,24 @@ namespace AMan.Controllers
 					}
 				}
 
+				android.Status = true;
 				_context.Add(android);
 				
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-			
-
-
 			return View(android);
         }
+
+		private string GetAvatarPath(IFormFile avatar)
+		{
+			string fileName = Path.GetFileNameWithoutExtension(avatar.FileName);
+			string extension = Path.GetExtension(avatar.FileName);
+			fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+
+			return Path.Combine("Avatars", fileName);
+		}
 
 		// GET: Androids/Edit/5
 		[Authorize]
@@ -118,7 +122,7 @@ namespace AMan.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 		[Authorize]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Avatar,Reliability,Status")] Android android)
+		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,AvatarPath,SkillsTags,Reliability,Status")] Android android, IFormFile avatar)
         {
             if (id != android.Id)
             {
@@ -129,7 +133,23 @@ namespace AMan.Controllers
             {
                 try
                 {
-                    _context.Update(android);
+					if (avatar != null)
+					{
+						if (android.AvatarPath != null)
+						{
+							System.IO.File.Delete(Path.Combine(_appEnvironment.WebRootPath, "Avatars", Path.GetFileName(android.AvatarPath)));
+						}
+
+						string path = GetAvatarPath(avatar);
+
+						android.AvatarPath = "~/" + path;
+
+						using (var fileStream = new FileStream(Path.Combine(_appEnvironment.WebRootPath, path), FileMode.Create))
+						{
+							await avatar.CopyToAsync(fileStream);
+						}
+					}
+					_context.Update(android);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -174,7 +194,11 @@ namespace AMan.Controllers
 		public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var android = await _context.Android.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Android.Remove(android);
+			if (android.AvatarPath != null)
+			{
+				System.IO.File.Delete(Path.Combine(_appEnvironment.WebRootPath, "Avatars", Path.GetFileName(android.AvatarPath)));
+			}
+			_context.Android.Remove(android);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -183,5 +207,5 @@ namespace AMan.Controllers
         {
             return _context.Android.Any(e => e.Id == id);
         }
-    }
+	}
 }

@@ -6,9 +6,8 @@
 
 <h2>Delete</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to delete this Android?</h3>
 <div>
-    <h4>Android</h4>
     <hr />
     <dl class="dl-horizontal">
         <input type="hidden" asp-for="Id" />
@@ -19,10 +18,10 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Avatar)
+            @Html.DisplayNameFor(model => model.AvatarPath)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Avatar)
+            <img src="@Url.Content(Model.AvatarPath ?? "~/Avatars/default.png")" class="avatar" />
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Reliability)
@@ -33,9 +32,13 @@
         <dt>
             @Html.DisplayNameFor(model => model.Status)
         </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
+        @if (@Model.Status == true)
+        {
+            <dd style="color: green">Active</dd>}
+        else
+        {
+            <dd style="color: red">Should be reclaimed</dd>
+        }
     </dl>
     
     <form asp-action="Delete">
