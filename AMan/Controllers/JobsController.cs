@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AMan.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +8,7 @@ using AMan.ViewModels;
 
 namespace AMan.Controllers
 {
-    public class JobsController : Controller
+	public class JobsController : Controller
     {
         private readonly AManJobContext _context;
 

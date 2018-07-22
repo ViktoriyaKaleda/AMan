@@ -22,7 +22,10 @@
                             <tbody>
                                 <tr>
                                     <td>Skills:</td>
-                                    <td>@Html.DisplayFor(model => model.Android.SkillsTags)</td>
+                                    <td>
+                                        @if (Model.Android.SkillsTags == null) {<p>-</p>}
+                                        @Html.DisplayFor(model => model.Android.SkillsTags)
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Reability:</td>

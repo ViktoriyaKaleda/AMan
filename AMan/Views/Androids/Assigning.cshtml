@@ -1,0 +1,45 @@
+@model IEnumerable<AMan.Models.Android>
+
+    @{
+    ViewData["Title"] = "Assigning";
+    }
+
+    <h2>Choose Android to assign</h2>
+    <div class="list-group">
+        @foreach (var item in Model)
+    {
+            <div>
+                <a asp-controller="Androids" asp-action="Assign" asp-route-id="@item.Id">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h2 class="panel-title">@item.Name</h2>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-3 col-lg-3 " align="center">
+                                    <img alt="User Pic" src="@Url.Content(item.AvatarPath ?? "~/Avatars/default.png")" style="height: 70px; weight: 70px;">
+                                </div>
+                                <div class=" col-md-9 col-lg-9 ">
+                                    <dl class="dl-horizontal">
+                                        <dt>                                            
+                                            Skills
+                                        </dt>
+                                        <dd>
+                                            @if (item.SkillsTags == null) {<p>-</p>}
+                                            @item.SkillsTags
+                                        </dd>
+                                        <dt>
+                                            Reliability
+                                        </dt>
+                                        <dd>
+                                            @item.Reliability
+                                        </dd>
+                                     </dl>
+</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+    }
+    </div>

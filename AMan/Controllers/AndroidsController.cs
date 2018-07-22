@@ -100,7 +100,7 @@ namespace AMan.Controllers
 			string extension = Path.GetExtension(avatar.FileName);
 			fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
 
-			return Path.Combine("Avatars", fileName);
+			return "Avatars/" + fileName;
 		}
 
 		// GET: Androids/Edit/5
@@ -141,7 +141,14 @@ namespace AMan.Controllers
 					{
 						if (android.AvatarPath != null)
 						{
-							System.IO.File.Delete(_appEnvironment.WebRootPath + "/Avatars/" + Path.GetFileName(android.AvatarPath));
+							try
+							{
+								System.IO.File.Delete(_appEnvironment.WebRootPath + "/Avatars/" + Path.GetFileName(android.AvatarPath));
+							}
+							catch (System.IO.IOException e)
+							{
+								_logger.LogWarning("Failed to delete android avatar file. File path: {}", android.AvatarPath);
+							}
 						}
 
 						string path = GetAvatarPath(avatar);
@@ -204,7 +211,14 @@ namespace AMan.Controllers
             var android = await _context.Android.SingleOrDefaultAsync(m => m.Id == id);
 			if (android.AvatarPath != null)
 			{
-				System.IO.File.Delete(_appEnvironment.WebRootPath + "/Avatars/" + Path.GetFileName(android.AvatarPath));
+				try
+				{
+					System.IO.File.Delete(_appEnvironment.WebRootPath + "/Avatars/" + Path.GetFileName(android.AvatarPath));
+				}
+				catch (System.IO.IOException e)
+				{
+					_logger.LogWarning("Failed to delete android avatar file. File path: {}", android.AvatarPath);
+				}
 			}
 			_context.Android.Remove(android);
             await _context.SaveChangesAsync();
@@ -216,6 +230,14 @@ namespace AMan.Controllers
             return _context.Android.Any(e => e.Id == id);
         }
 
+		// GET: Androids/Assigning/5
+		[Authorize]
+		public async Task<IActionResult> Assigning(int? id)
+		{
+			return View(await _context.Android.Where(a => a.Status == true && a.CurrentJobId == null).Include(a => a.CurrentJob).ToListAsync());
+		}
+
+		// GET: Androids/Assign/5
 		[Authorize]
 		public async Task<IActionResult> Assign(int? id)
 		{
@@ -242,6 +264,7 @@ namespace AMan.Controllers
 			return View(androidViewModel);
 		}
 
+		// POST: Androids/Assign/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize]
@@ -263,6 +286,7 @@ namespace AMan.Controllers
 					_context.Update(android);
 					await _context.SaveChangesAsync();
 				}
+
 				catch (DbUpdateConcurrencyException)
 				{
 					if (!AndroidExists(android.Id))
@@ -277,7 +301,8 @@ namespace AMan.Controllers
 			}
 			return RedirectToAction("Index");
 		}
-		
+
+		// GET: Androids/Remove/5
 		[Authorize]
 		public async Task<IActionResult> Remove(int? id)
 		{
@@ -295,6 +320,7 @@ namespace AMan.Controllers
 			return View(android);
 		}
 
+		// POST: Androids/Remove/5
 		[HttpPost, ActionName("Remove")]
 		[ValidateAntiForgeryToken]
 		[Authorize]
@@ -312,6 +338,7 @@ namespace AMan.Controllers
 					_context.Update(android);
 					await _context.SaveChangesAsync();
 				}
+
 				catch (DbUpdateConcurrencyException)
 				{
 					if (!AndroidExists(android.Id))
@@ -323,6 +350,7 @@ namespace AMan.Controllers
 						throw;
 					}
 				}
+
 			return RedirectToAction("Index");
 		}
 	}
