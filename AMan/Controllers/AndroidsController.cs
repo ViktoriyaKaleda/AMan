@@ -44,9 +44,10 @@ namespace AMan.Controllers
                 return NotFound();
             }
 
-            var android = await _context.Android
+            var android = await _context.Android.Include(a => a.CurrentJob)
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (android == null)
+
+			if (android == null)
             {
                 return NotFound();
             }
@@ -184,7 +185,7 @@ namespace AMan.Controllers
                 return NotFound();
             }
 
-            var android = await _context.Android
+            var android = await _context.Android.Include(a => a.CurrentJob)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (android == null)
             {
@@ -246,7 +247,6 @@ namespace AMan.Controllers
 		[Authorize]
 		public async Task<IActionResult> Assign(int id, [Bind("Android")] AndroidViewModel androidViewModel)
 		{
-			_logger.LogError("in post");
 			if (androidViewModel.Android.CurrentJobId != null)
 			{
 				var android = await _context.Android.SingleOrDefaultAsync(m => m.Id == id);
@@ -275,6 +275,54 @@ namespace AMan.Controllers
 					}
 				}
 			}
+			return RedirectToAction("Index");
+		}
+		
+		[Authorize]
+		public async Task<IActionResult> Remove(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var android = await _context.Android.Include(a => a.CurrentJob).SingleOrDefaultAsync(m => m.Id == id);
+			if (android == null)
+			{
+				return NotFound();
+			}
+
+			return View(android);
+		}
+
+		[HttpPost, ActionName("Remove")]
+		[ValidateAntiForgeryToken]
+		[Authorize]
+		public async Task<IActionResult> RemoveConfirmed(int id)
+		{
+				var android = await _context.Android.SingleOrDefaultAsync(m => m.Id == id);
+				if (android == null)
+				{
+					return NotFound();
+				}
+
+				try
+				{
+					android.CurrentJobId = null;
+					_context.Update(android);
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!AndroidExists(android.Id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
 			return RedirectToAction("Index");
 		}
 	}

@@ -1,0 +1,97 @@
+@model AMan.Models.Android
+
+@{
+    ViewData["Title"] = "Remove";
+}
+
+<h2>Remove Android from job?</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h2 class="text-primary text-center">Android</h2>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3 col-lg-3 " align="center">
+                    <img alt="User Pic" src="@Url.Content(Model.AvatarPath ?? "~/Avatars/default.png")" class="img-responsive">
+                </div>
+                <div class=" col-md-9 col-lg-9 ">
+                    <table class="table table-user-information">
+                        <tbody>
+                            <tr>
+                                <td>Name:</td>
+                                <td>@Html.DisplayFor(model => model.Name)</td>
+                            </tr>
+                            <tr>
+                                <td>Skills:</td>
+                                <td>@Html.DisplayFor(model => model.SkillsTags)</td>
+                            </tr>
+                            <tr>
+                                <td>Reability:</td>
+                                <td>@Html.DisplayFor(model => model.Reliability)</td>
+                            </tr>
+                            <tr>
+                                <td>Status:</td>
+                                @if (@Model.Status == true)
+                                {
+                                    <td style="color: green">Active</td>}
+                                else
+                                {
+                                    <td style="color: red">Should be reclaimed</td>}
+                            </tr>
+                            <tr>
+                                <td>Current job:</td>
+                                @if (@Model.CurrentJobId == null)
+                                {
+                                    if (@Model.Status == true)
+                                    {
+                                        <td>
+                                            <a asp-action="Assign" asp-route-id="@Model.Id" class="col-md-2 control-label"><i class="glyphicon glyphicon-plus"></i></a>
+                                        </td>
+}
+                                    else
+                                    {
+                                        <td>-</td>
+}
+                                }
+                                else
+                                {
+                                    <td>
+                                        <a asp-controller="Jobs" asp-action="Details" asp-route-id="@Model.CurrentJobId">@Model.CurrentJob.Name</a>
+                                    </td>}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h2 class="text-primary text-center">Job</h2>
+        <div class="panel-body">
+            <table class="table table-user-information">
+                <tbody>
+                    <tr>
+                        <td>Name:</td>
+                        <td>@Model.CurrentJob.Name</td>
+                    </tr>
+                    <tr>
+                        <td>Description:</td>
+                        <td>@Model.CurrentJob.Description</td>
+                    </tr>
+                    <tr>
+                        <td>Complexity:</td>
+                        <td>@Model.CurrentJob.Complexity</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+     </div>
+    <form asp-action="Remove">
+        <div class="form-actions no-color">
+            <input type="submit" value="Remove from job" class="btn btn-danger" />
+        </div>
+    </form>
+</div>
+<div>
+    <a asp-controller="Androids" asp-action="Index">Back to Androids List</a> |
+    <a asp-controller="Jobs" asp-action="Index">Back to jobs List</a>
+</div>

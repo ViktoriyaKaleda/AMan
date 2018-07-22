@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AMan.Models;
 using Microsoft.AspNetCore.Authorization;
+using AMan.ViewModels;
 
 namespace AMan.Controllers
 {
@@ -42,7 +43,11 @@ namespace AMan.Controllers
                 return NotFound();
             }
 
-            return View(job);
+			var assignedAndroids = await _context.Android.Where(a => a.CurrentJobId == job.Id).ToListAsync();
+
+			JobDetailsViewModel jobView = new JobDetailsViewModel(job, assignedAndroids);
+
+            return View(jobView);
         }
 
 		// GET: Jobs/Create

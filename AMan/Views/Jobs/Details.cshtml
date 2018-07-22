@@ -1,48 +1,54 @@
-@model AMan.Models.Job
+@model AMan.ViewModels.JobDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>Job details</h2>
 
 <div>
-    <h4>Job</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Job.Name)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Job.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Job.Description)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Job.Description)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Complexity)
+            @Html.DisplayNameFor(model => model.Job.Complexity)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Complexity)
-        </dd>        
+            @Html.DisplayFor(model => model.Job.Complexity)
+        </dd> 
+        <dt>
+            Assigned Androids
+        </dt>
+        <dd>
+            @if (Model.AssignedAndroids.Count == 0)
+            {
+                <p>-</p>
+
+            }
+            @foreach (var item in Model.AssignedAndroids)
+            {    <div>
+                    <a asp-controller="Androids" asp-action="Details" asp-route-id="@item.Id">
+                        <img src="@Url.Content(item.AvatarPath ?? "~/Avatars/default.png")" class="avatar" style="display: inline-block;" />
+                        <h5 class="list-group-item-heading" style="display: inline-block;">@item.Name</h5>
+                    </a>
+                    <a asp-controller="Androids" asp-action="Remove" asp-route-id="@item.Id" style="display: inline-block;"><i class="glyphicon glyphicon-remove"></i></a>
+                 </div>}
+        </dd>
     </dl>
-    @*<div>
-    <details>
-        <summary>Assign Android to this job</summary>
-        <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading">List group item heading</h5>
-                <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-            </a>
-        </div>
-    </details>
-        </div>*@
 </div>
 <br />
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Job.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
