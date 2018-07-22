@@ -53,20 +53,31 @@
             @if (item.Status == true)
             {
                 <p style="color: green">Active</p>
-}
+            }
             else
             {
                 <p style="color: red">Should be reclaimed</p>
             }
          </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CurrentJob)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+        <td>
+            @if (item.CurrentJobId == null)
+            {
+                if (item.Status == true)
+                {
+                    <a asp-action="Assign" asp-route-id="@item.Id" class="col-md-2 control-label"><i class="glyphicon glyphicon-plus"></i></a>
+                }
+            }
+            else
+            {
+                @Html.DisplayFor(modelItem => item.CurrentJob.Name)
+
+            }
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+        </td>
             </tr>}
     </tbody>
 </table>

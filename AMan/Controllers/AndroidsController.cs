@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using AMan.ViewModels;
 
 namespace AMan.Controllers
 {
@@ -29,7 +32,7 @@ namespace AMan.Controllers
 		[Authorize]
 		public async Task<IActionResult> Index()
         {
-            return View(await _context.Android.ToListAsync());
+            return View(await _context.Android.Include(a => a.CurrentJob).ToListAsync());
         }
 
 		// GET: Androids/Details/5
@@ -122,7 +125,7 @@ namespace AMan.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 		[Authorize]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,AvatarPath,SkillsTags,Reliability,Status")] Android android, IFormFile avatar)
+		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,AvatarPath,SkillsTags,Reliability,Status,CurrentJobId")] Android android, IFormFile avatar)
         {
             if (id != android.Id)
             {
@@ -148,6 +151,10 @@ namespace AMan.Controllers
 						{
 							await avatar.CopyToAsync(fileStream);
 						}
+					}
+					if (android.Reliability == 0)
+					{
+						android.Status = false;
 					}
 					_context.Update(android);
                     await _context.SaveChangesAsync();
@@ -207,5 +214,68 @@ namespace AMan.Controllers
         {
             return _context.Android.Any(e => e.Id == id);
         }
+
+		[Authorize]
+		public async Task<IActionResult> Assign(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var android = await _context.Android.SingleOrDefaultAsync(m => m.Id == id);
+			if (android == null)
+			{
+				return NotFound();
+			}
+
+			IEnumerable<SelectListItem> activeJobs = _context.Job
+				.Select(a => new SelectListItem()
+				{
+					Value = a.Id.ToString(),
+					Text = a.Name
+				}).ToList();
+
+			AndroidViewModel androidViewModel = new AndroidViewModel(android, activeJobs);
+
+			return View(androidViewModel);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize]
+		public async Task<IActionResult> Assign(int id, [Bind("Android")] AndroidViewModel androidViewModel)
+		{
+			_logger.LogError("in post");
+			if (androidViewModel.Android.CurrentJobId != null)
+			{
+				var android = await _context.Android.SingleOrDefaultAsync(m => m.Id == id);
+				if (android == null)
+				{
+					return NotFound();
+				}
+
+				try
+				{
+					android.CurrentJobId = androidViewModel.Android.CurrentJobId;
+					android.Reliability--;
+
+					_context.Update(android);
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!AndroidExists(android.Id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+			}
+			return RedirectToAction("Index");
+		}
 	}
 }
