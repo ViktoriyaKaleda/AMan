@@ -302,9 +302,9 @@ namespace AMan.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// GET: Androids/Remove/5
+		// GET: Androids/Unassign/5
 		[Authorize]
-		public async Task<IActionResult> Remove(int? id)
+		public async Task<IActionResult> Unassign(int? id)
 		{
 			if (id == null)
 			{
@@ -320,8 +320,8 @@ namespace AMan.Controllers
 			return View(android);
 		}
 
-		// POST: Androids/Remove/5
-		[HttpPost, ActionName("Remove")]
+		// POST: Androids/Unassign/5
+		[HttpPost, ActionName("Unassign")]
 		[ValidateAntiForgeryToken]
 		[Authorize]
 		public async Task<IActionResult> RemoveConfirmed(int id)

@@ -42,7 +42,7 @@
                         <img src="@Url.Content(item.AvatarPath ?? "~/Avatars/default.png")" class="avatar" style="display: inline-block;" />
                         <h5 class="list-group-item-heading" style="display: inline-block;">@item.Name</h5>
                     </a>
-                    <a asp-controller="Androids" asp-action="Remove" asp-route-id="@item.Id" style="display: inline-block;"><i class="glyphicon glyphicon-remove"></i></a>
+                    <a asp-controller="Androids" asp-action="Unassign" asp-route-id="@item.Id" style="display: inline-block;"><i class="glyphicon glyphicon-remove"></i></a>
                  </div>}
         </dd>
     </dl>
