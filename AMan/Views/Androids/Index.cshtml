@@ -66,10 +66,15 @@
                 {
                     <a asp-action="Assign" asp-route-id="@item.Id" class="col-md-2 control-label"><i class="glyphicon glyphicon-plus"></i></a>
                 }
+                else
+                {
+                    <p>-</p>
+
+                }
             }
             else
             {
-                @Html.DisplayFor(modelItem => item.CurrentJob.Name)
+                <a asp-controller="Jobs" asp-action="Details" asp-route-id="@item.CurrentJobId">@item.CurrentJob.Name</a>              
 
             }
         </td>
