@@ -150,7 +150,13 @@ namespace AMan.Controllers
 		public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var job = await _context.Job.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Job.Remove(job);
+			var androids = await _context.Android.Where(a => a.CurrentJobId == job.Id).ToListAsync();
+			foreach (var a in androids)
+			{
+				a.CurrentJobId = null;
+			}
+			_context.Android.UpdateRange(androids);
+			_context.Job.Remove(job);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }

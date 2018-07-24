@@ -15,7 +15,13 @@ namespace AMan.Models
 		public string Description { get; set; }
 
 		[Required]
-		[Range(0, 10, ErrorMessage = "Must be between 0 to 10.")]
-		public int Complexity { get; set; }
+		public ComplexityLevel Complexity { get; set; }
+	}
+
+	public enum ComplexityLevel
+	{
+		Low = 1,
+		Medium = 2,
+		High = 3
 	}
 }

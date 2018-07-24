@@ -252,12 +252,12 @@ namespace AMan.Controllers
 				return NotFound();
 			}
 
-			IEnumerable<SelectListItem> activeJobs = _context.Job
+			var activeJobs = await _context.Job
 				.Select(a => new SelectListItem()
 				{
 					Value = a.Id.ToString(),
 					Text = a.Name
-				}).ToList();
+				}).ToListAsync();
 
 			AndroidViewModel androidViewModel = new AndroidViewModel(android, activeJobs);
 
